@@ -1,6 +1,6 @@
 import math
 
-class ConstrainFix:
+class ConstrainFix():
     def __init__(self, modelspace_origin):
         self.x_origin = modelspace_origin[0]
         self.y_origin = modelspace_origin[1]
@@ -15,7 +15,7 @@ class ConstrainFix:
         canvas_modelspace.create_line(x - 35*math.sin(math.pi/6), self.y_origin + 35*math.cos(math.pi/6), x, self.y_origin, width=3, tag = 'constfix_3')
 
 
-class ConstrainRolling:
+class ConstrainRolling():
     def __init__(self, modelspace_origin):
         self.x_origin = modelspace_origin[0]
         self.y_origin = modelspace_origin[1]

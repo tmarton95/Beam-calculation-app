@@ -1,6 +1,12 @@
 import math
 
-class Force:
+class Loads():
+    def __init__(self):
+        self.forces_dict = {}
+        self.moments_dict = {}
+        self.force_id = 0
+
+class Force():
     def __init__(self, modelspace_origin, name):
         self.name = name
         self.L = 50
