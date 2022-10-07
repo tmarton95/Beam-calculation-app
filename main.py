@@ -2,8 +2,9 @@ from tkinter import*
 from beam_class import Beam
 from load_classes import Loads
 from layout_main_class import Layout
+from layout_scrollbar import LayoutScrollbar
 from constrain_classes import ConstrainFix, ConstrainRolling
-from functions import create_force, remove_obj, get_properties
+from functions import create_force, edit_loads, remove_obj, edit_geometry
 
 
 window = Tk()
@@ -28,7 +29,9 @@ Define initial instances from classes:
 """
 loads_properties = Loads()
 
-layout_properties = Layout(window, create_force, loads_properties, modelspace_origin, canvas_modelspace)
+scrollbar_properties = LayoutScrollbar(window)
+
+layout_properties = Layout(window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads)
 
 beam_properties = Beam(modelspace_origin)
 beam_properties.draw_beam(canvas_modelspace)
@@ -39,10 +42,9 @@ const_fixed.draw_const(canvas_modelspace)
 const_roller = ConstrainRolling(modelspace_origin)
 const_roller.draw_const(canvas_modelspace)
 
-
 # 'Update' button:
-btn_add_moment = Button(window, text = "Update", width = 11, height = 1, font = ('Arial', 14), background='orange', 
-                        command = lambda: get_properties(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties))
+btn_add_moment = Button(window, text = "Update Geometry", width = 15, height = 1, font = ('Arial', 12), background='orange', 
+                        command = lambda: edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties, scrollbar_properties,))
 btn_add_moment.place(x = 100, y = 450, anchor = 'center')
 
 window.mainloop()

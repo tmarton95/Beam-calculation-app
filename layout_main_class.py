@@ -1,7 +1,9 @@
 from tkinter import*
 
-class Layout:
-    def __init__(self, window, create_force, loads_properties, modelspace_origin, canvas_modelspace):
+from functions import edit_loads
+
+class Layout():
+    def __init__(self, window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads):
         self.Const1_pic = PhotoImage(file = "pics\\const1.png").subsample(5, 5)
         self.Const2_pic = PhotoImage(file = "pics\\Const2_2.png").subsample(5, 5)
         self.Beam1_pic = PhotoImage(file = "pics\\Beam1_2.png").subsample(5, 5)
@@ -82,7 +84,7 @@ class Layout:
 
         # 'Add' button:
         btn_add_force = Button(window, text = "+", height = 2, font = ('Arial', 16), 
-                                command = lambda: create_force(self, loads_properties, modelspace_origin, canvas_modelspace))
+                                command = lambda: create_force(self, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties))
         btn_add_force.place(x = 280, y = 110, anchor = 'center')
 
         # X-position:
@@ -159,7 +161,11 @@ class Layout:
         self.txt_mz.insert(END, '0')
 
 
+        # Remove + Edit button from load-list:
+        btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), 
+                                background = 'grey', command= lambda: remove_obj(loads_properties, scrollbar_properties, canvas_modelspace))
+        btn_remove.place(x = 460, y = 415, anchor = 'center')
 
-
-
-
+        btn_edit = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), 
+                                background = 'grey', command= lambda: edit_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties = self))
+        btn_edit.place(x = 460, y = 360, anchor = 'center')

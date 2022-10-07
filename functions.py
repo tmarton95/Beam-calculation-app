@@ -1,15 +1,16 @@
+from tkinter import*
 from load_classes import Force
 
 """
 Create force object:
 """
-def create_force(layout_properties, loads_properties, modelspace_origin, canvas_modelspace):
+def create_force(layout_properties, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties):
     # Get forces from text field:
     Fx = float(layout_properties.txt_fx.get())
     Fy = float(layout_properties.txt_fy.get())
     if Fx != 0 or Fy != 0:
         loads_properties.force_id += 1
-        force_name = f"force_{loads_properties.force_id}"
+        force_name = f"Force_{loads_properties.force_id}"
 
         # Create instance for new force object + add to the dictionary:
         loads_properties.forces_dict[force_name] = loads_properties.forces_dict.get(force_name, Force(modelspace_origin, name = force_name))
@@ -19,22 +20,21 @@ def create_force(layout_properties, loads_properties, modelspace_origin, canvas_
         loads_properties.forces_dict[force_name].Fx = Fx
         loads_properties.forces_dict[force_name].Fy = Fy
         loads_properties.forces_dict[force_name].draw_force(canvas_modelspace)
-        #layout_properties.mylist.insert(END, force_name)
+        scrollbar_properties.mylist.insert(END, force_name)
 
 """
 Remove forces from list:
 """
-def remove_obj():
-    pass
-    # selected_name = layout_properties.mylist.get(layout_properties.mylist.curselection())
-    # canvas_modelspace.delete(selected_name)
-    # del forces_dict[selected_name]
-    # layout_properties.mylist.delete(ACTIVE)
+def remove_obj(loads_properties, scrollbar_properties, canvas_modelspace):
+    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
+    canvas_modelspace.delete(selected_name)
+    del loads_properties.forces_dict[selected_name]
+    scrollbar_properties.mylist.delete(ACTIVE)
 
 """
 Updating properties:
 """
-def get_properties(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties):
+def edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties):
     # Get x-distance of constrain from text:
     const_fixed.x_real = float(layout_properties.txt_const1_x.get())
     const_roller.x_real = float(layout_properties.txt_const2_x.get())
@@ -47,6 +47,7 @@ def get_properties(layout_properties, canvas_modelspace, const_fixed, const_roll
     const_fixed.draw_const(canvas_modelspace)
     const_roller.draw_const(canvas_modelspace)
 
+    # Update beam properties + draw it:
     beam_length = float(layout_properties.txt_beam.get())
     if beam_length != 0:
         beam_properties.length_real = beam_length
@@ -56,3 +57,17 @@ def get_properties(layout_properties, canvas_modelspace, const_fixed, const_roll
     beam_properties.d = float(layout_properties.txt_d.get())
     beam_properties.a = float(layout_properties.txt_a.get())
     beam_properties.b = float(layout_properties.txt_b.get())
+
+"""
+Edit loads:
+"""
+def edit_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties):
+    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
+    # Get force data from text:
+    loads_properties.forces_dict[selected_name].Fx = float(layout_properties.txt_fx.get())
+    loads_properties.forces_dict[selected_name].Fy = float(layout_properties.txt_fy.get())
+    loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x.get())
+
+    canvas_modelspace.delete(selected_name)
+    loads_properties.forces_dict[selected_name].draw_force(canvas_modelspace)
+    
