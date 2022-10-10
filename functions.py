@@ -6,8 +6,8 @@ Create force object:
 """
 def create_force(layout_properties, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties):
     # Get forces from text field:
-    Fx = float(layout_properties.txt_fx.get())
-    Fy = float(layout_properties.txt_fy.get())
+    Fx = float(layout_properties.txt_force_x.get())
+    Fy = float(layout_properties.txt_force_y.get())
     if Fx != 0 or Fy != 0:
         loads_properties.force_id += 1
         force_name = f"Force_{loads_properties.force_id}"
@@ -16,7 +16,8 @@ def create_force(layout_properties, loads_properties, modelspace_origin, canvas_
         loads_properties.forces_dict[force_name] = loads_properties.forces_dict.get(force_name, Force(modelspace_origin, name = force_name))
 
         # Set up attributes for the force object:
-        loads_properties.forces_dict[force_name].x_real = float(layout_properties.txt_force_x.get())
+        loads_properties.forces_dict[force_name].x_real = float(layout_properties.txt_force_x_pos.get())
+        loads_properties.forces_dict[force_name].y_real = float(layout_properties.txt_force_y_pos.get())
         loads_properties.forces_dict[force_name].Fx = Fx
         loads_properties.forces_dict[force_name].Fy = Fy
         loads_properties.forces_dict[force_name].draw_force(canvas_modelspace)
@@ -61,13 +62,39 @@ def edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_rolle
 """
 Edit loads:
 """
-def edit_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties):
-    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
-    # Get force data from text:
-    loads_properties.forces_dict[selected_name].Fx = float(layout_properties.txt_fx.get())
-    loads_properties.forces_dict[selected_name].Fy = float(layout_properties.txt_fy.get())
-    loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x.get())
+def edit_loads(scrollbar_properties, loads_properties, layout_properties):
+    try:
+        selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
+        scrollbar_properties.last_selected_load = selected_name
 
+        # Write out selected force's forces + position:
+        layout_properties.txt_force_x_pos.delete (0, 10)
+        layout_properties.txt_force_y_pos.delete (0, 10)
+        layout_properties.txt_force_x.delete (0, 10)
+        layout_properties.txt_force_y.delete (0, 10)
+
+        # Insert load values to the entry boxes:
+        layout_properties.txt_force_x_pos.insert(END, loads_properties.forces_dict[selected_name].x_real)
+        layout_properties.txt_force_y_pos.insert(END, loads_properties.forces_dict[selected_name].y_real)
+        layout_properties.txt_force_x.insert(END, loads_properties.forces_dict[selected_name].Fx)
+        layout_properties.txt_force_y.insert(END, loads_properties.forces_dict[selected_name].Fy)
+    except:
+        pass
+
+
+"""
+Apply loads:
+"""
+def apply_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties):
+    selected_name = scrollbar_properties.last_selected_load
+
+    # Get force data from text:
+    loads_properties.forces_dict[selected_name].Fx = float(layout_properties.txt_force_x.get())
+    loads_properties.forces_dict[selected_name].Fy = float(layout_properties.txt_force_y.get())
+    loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x_pos.get())
+    loads_properties.forces_dict[selected_name].y_real = float(layout_properties.txt_force_y_pos.get())
+
+    # Update position of load / load's figure:
     canvas_modelspace.delete(selected_name)
     loads_properties.forces_dict[selected_name].draw_force(canvas_modelspace)
     

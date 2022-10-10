@@ -4,7 +4,7 @@ from load_classes import Loads
 from layout_main_class import Layout
 from layout_scrollbar import LayoutScrollbar
 from constrain_classes import ConstrainFix, ConstrainRolling
-from functions import create_force, edit_loads, remove_obj, edit_geometry
+from functions import create_force, remove_obj, edit_geometry, edit_loads, apply_loads
 
 
 window = Tk()
@@ -25,13 +25,13 @@ canvas_modelspace.place(x = X_modelspace, y = Y_modelspace)
 modelspace_origin = [100, 250]
 
 """
-Define initial instances from classes:
+Define initial instances from classes + draw figures:
 """
 loads_properties = Loads()
 
 scrollbar_properties = LayoutScrollbar(window)
 
-layout_properties = Layout(window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads)
+layout_properties = Layout(window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads, apply_loads)
 
 beam_properties = Beam(modelspace_origin)
 beam_properties.draw_beam(canvas_modelspace)
@@ -46,5 +46,6 @@ const_roller.draw_const(canvas_modelspace)
 btn_add_moment = Button(window, text = "Update Geometry", width = 15, height = 1, font = ('Arial', 12), background='orange', 
                         command = lambda: edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties, scrollbar_properties,))
 btn_add_moment.place(x = 100, y = 450, anchor = 'center')
+
 
 window.mainloop()

@@ -12,6 +12,7 @@ class Force():
         self.L = 50
         self.l = 20
         self.x_real = 0.5
+        self.y_real = 0
         self.scale = 500
         self.Fx = 0
         self.Fy = -1

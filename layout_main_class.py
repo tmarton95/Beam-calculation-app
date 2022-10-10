@@ -1,9 +1,7 @@
 from tkinter import*
 
-from functions import edit_loads
-
 class Layout():
-    def __init__(self, window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads):
+    def __init__(self, window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads, apply_loads):
         self.Const1_pic = PhotoImage(file = "pics\\const1.png").subsample(5, 5)
         self.Const2_pic = PhotoImage(file = "pics\\Const2_2.png").subsample(5, 5)
         self.Beam1_pic = PhotoImage(file = "pics\\Beam1_2.png").subsample(5, 5)
@@ -88,40 +86,40 @@ class Layout():
         btn_add_force.place(x = 280, y = 110, anchor = 'center')
 
         # X-position:
-        label_force_x = Label(window, text = "X [m]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_force_x_pos = Label(window, text = "X [m]:", font = ('Verdana', 9), borderwidth = 0.75,
                                                     relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_force_x.place(x = 320, y = 35, anchor = 'w')
+        label_force_x_pos.place(x = 320, y = 35, anchor = 'w')
 
-        self.txt_force_x = Entry(window, width = 9)
-        self.txt_force_x.place(x = 400, y = 35, anchor = 'w')
-        self.txt_force_x.insert(END, '0')
+        self.txt_force_x_pos = Entry(window, width = 9)
+        self.txt_force_x_pos.place(x = 400, y = 35, anchor = 'w')
+        self.txt_force_x_pos.insert(END, '0.0')
 
         # Y-position:
-        label_force_y = Label(window, text = "Y [m]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_force_y_pos = Label(window, text = "Y [m]:", font = ('Verdana', 9), borderwidth = 0.75,
                                             relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_force_y.place(x = 320, y = 70, anchor = 'w')
+        label_force_y_pos.place(x = 320, y = 70, anchor = 'w')
 
-        self.txt_force_y = Entry(window, width = 9)
-        self.txt_force_y.place(x = 400, y = 70, anchor = 'w')
-        self.txt_force_y.insert(END, '0')
+        self.txt_force_y_pos = Entry(window, width = 9)
+        self.txt_force_y_pos.place(x = 400, y = 70, anchor = 'w')
+        self.txt_force_y_pos.insert(END, '0.0')
 
         # X-component:
-        label_fx = Label(window, text = "Fx [N]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_force_x = Label(window, text = "Fx [N]:", font = ('Verdana', 9), borderwidth = 0.75,
                                     relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_fx.place(x = 320, y = 105, anchor = 'w')
+        label_force_x.place(x = 320, y = 105, anchor = 'w')
 
-        self.txt_fx = Entry(window, width = 9)
-        self.txt_fx.place(x = 400, y = 105, anchor = 'w')
-        self.txt_fx.insert(END, '0')
+        self.txt_force_x = Entry(window, width = 9)
+        self.txt_force_x.place(x = 400, y = 105, anchor = 'w')
+        self.txt_force_x.insert(END, '0.0')
 
         # Y-component:
-        label_fy = Label(window, text = "Fy [N]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_force_y = Label(window, text = "Fy [N]:", font = ('Verdana', 9), borderwidth = 0.75,
                                     relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_fy.place(x = 320, y = 140, anchor = 'w')
+        label_force_y.place(x = 320, y = 140, anchor = 'w')
 
-        self.txt_fy = Entry(window, width = 9)
-        self.txt_fy.place(x = 400, y = 140, anchor = 'w')
-        self.txt_fy.insert(END, '0')
+        self.txt_force_y = Entry(window, width = 9)
+        self.txt_force_y.place(x = 400, y = 140, anchor = 'w')
+        self.txt_force_y.insert(END, '0.0')
 
         """
         For Moment properties:
@@ -161,11 +159,15 @@ class Layout():
         self.txt_mz.insert(END, '0')
 
 
-        # Remove + Edit button from load-list:
+        # Remove, Edit, Apply buttons:
         btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), 
                                 background = 'grey', command= lambda: remove_obj(loads_properties, scrollbar_properties, canvas_modelspace))
-        btn_remove.place(x = 460, y = 415, anchor = 'center')
+        btn_remove.place(x = 460, y = 460, anchor = 'center')
 
         btn_edit = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: edit_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties = self))
+                                background = 'grey', command= lambda: edit_loads(scrollbar_properties, loads_properties, layout_properties = self))
         btn_edit.place(x = 460, y = 360, anchor = 'center')
+
+        btn_apply = Button(window, text = "Apply", height = 1, width = 8, font = ('Arial', 10), 
+                                background = 'grey', command= lambda: apply_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties = self))
+        btn_apply.place(x = 460, y = 400, anchor = 'center')

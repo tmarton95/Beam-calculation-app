@@ -29,5 +29,6 @@ class LayoutScrollbar():
 
         self.mylist = Listbox(window, width = 22, height = 8,  yscrollcommand = objects_scroll.set)
         self.mylist.place(x = 260, y = 410, anchor='w')
+        self.last_selected_load = ""
         #objects_scroll.config(command = mylist.yview)
         #objects_scroll.set(50, 25)
