@@ -1,7 +1,8 @@
 from tkinter import*
+from functions import create_force, update_geometry, remove_obj, edit_loads, apply_loads
 
 class Layout():
-    def __init__(self, window, create_force, remove_obj, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties, edit_loads, apply_loads):
+    def __init__(self, window, canvas_modelspace, modelspace_origin, loads_properties, scrollbar_properties, const_fixed, const_roller, beam_properties):
         self.Const1_pic = PhotoImage(file = "pics\\const1.png").subsample(5, 5)
         self.Const2_pic = PhotoImage(file = "pics\\Const2_2.png").subsample(5, 5)
         self.Beam1_pic = PhotoImage(file = "pics\\Beam1_2.png").subsample(5, 5)
@@ -158,16 +159,35 @@ class Layout():
         self.txt_mz.place(x = 400, y = 280, anchor = 'w')
         self.txt_mz.insert(END, '0')
 
+        """
+        Other operating buttons + labels:
+        """
+        label_selections = Label(window, text = "Load selections", font = ('Verdana', 9), borderwidth = 0.75,
+                                    relief = 'ridge', bg = 'white', width = 14, height = 1)
+        label_selections.place(x = 270, y = 330, anchor = 'w')
 
-        # Remove, Edit, Apply buttons:
-        btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: remove_obj(loads_properties, scrollbar_properties, canvas_modelspace))
-        btn_remove.place(x = 460, y = 460, anchor = 'center')
+        # Update geometry:
+        btn_update_geometry = Button(window, text = "Update Geometry", width = 15, height = 1, font = ('Arial', 12), background='orange', 
+                        command = lambda: update_geometry(beam_properties, canvas_modelspace, const_fixed, const_roller, layout_properties = self))
+        btn_update_geometry.place(x = 100, y = 460, anchor = 'center')
 
-        btn_edit = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: edit_loads(scrollbar_properties, loads_properties, layout_properties = self))
-        btn_edit.place(x = 460, y = 360, anchor = 'center')
+        # Edit loads:
+        btn_edit_loads = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), 
+                                background = 'grey', command= lambda: edit_loads(loads_properties, scrollbar_properties, layout_properties = self))
+        btn_edit_loads.place(x = 450, y = 365, anchor = 'center')
 
+        # Apply loads:
         btn_apply = Button(window, text = "Apply", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: apply_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties = self))
-        btn_apply.place(x = 460, y = 400, anchor = 'center')
+                                background = 'grey', command= lambda: apply_loads(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties = self))
+        btn_apply.place(x = 450, y = 420, anchor = 'center')
+
+                # Remove
+        btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), 
+                                background = 'grey', command= lambda: remove_obj(canvas_modelspace, loads_properties, scrollbar_properties))
+        btn_remove.place(x = 450, y = 475, anchor = 'center')
+
+        self.txt_load_name = Entry(window, width = 14, font = (10))
+        self.txt_load_name.place(x = 265, y = 510, anchor = 'w')
+        self.txt_load_name.insert(END, 'Load-name')
+        self.txt_load_name.config(state = 'disabled')
+

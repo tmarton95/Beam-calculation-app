@@ -24,25 +24,15 @@ def create_force(layout_properties, loads_properties, modelspace_origin, canvas_
         scrollbar_properties.mylist.insert(END, force_name)
 
 """
-Remove forces from list:
-"""
-def remove_obj(loads_properties, scrollbar_properties, canvas_modelspace):
-    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
-    canvas_modelspace.delete(selected_name)
-    del loads_properties.forces_dict[selected_name]
-    scrollbar_properties.mylist.delete(ACTIVE)
-
-"""
 Updating properties:
 """
-def edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_roller, beam_properties):
+def update_geometry(beam_properties, canvas_modelspace, const_fixed, const_roller, layout_properties):
     # Get x-distance of constrain from text:
     const_fixed.x_real = float(layout_properties.txt_const1_x.get())
     const_roller.x_real = float(layout_properties.txt_const2_x.get())
 
     # Delete figure of previous constrain:
-    canvas_modelspace.delete('constfix_1', 'constfix_2', 'constfix_3')
-    canvas_modelspace.delete('constroll_1', 'constroll_2', 'constroll_3', 'constroll_4')
+    canvas_modelspace.delete('constfix', 'constroll')
 
     # Draw new figure:
     const_fixed.draw_const(canvas_modelspace)
@@ -62,30 +52,33 @@ def edit_geometry(layout_properties, canvas_modelspace, const_fixed, const_rolle
 """
 Edit loads:
 """
-def edit_loads(scrollbar_properties, loads_properties, layout_properties):
+def edit_loads(loads_properties, scrollbar_properties, layout_properties):
     try:
         selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
         scrollbar_properties.last_selected_load = selected_name
 
         # Write out selected force's forces + position:
-        layout_properties.txt_force_x_pos.delete (0, 10)
-        layout_properties.txt_force_y_pos.delete (0, 10)
-        layout_properties.txt_force_x.delete (0, 10)
-        layout_properties.txt_force_y.delete (0, 10)
+        layout_properties.txt_force_x_pos.delete(0, 10)
+        layout_properties.txt_force_y_pos.delete(0, 10)
+        layout_properties.txt_force_x.delete(0, 10)
+        layout_properties.txt_force_y.delete(0, 10)
 
         # Insert load values to the entry boxes:
         layout_properties.txt_force_x_pos.insert(END, loads_properties.forces_dict[selected_name].x_real)
         layout_properties.txt_force_y_pos.insert(END, loads_properties.forces_dict[selected_name].y_real)
         layout_properties.txt_force_x.insert(END, loads_properties.forces_dict[selected_name].Fx)
         layout_properties.txt_force_y.insert(END, loads_properties.forces_dict[selected_name].Fy)
+
+        layout_properties.txt_load_name.config(state = 'normal')
+        layout_properties.txt_load_name.delete(0, END)
+        layout_properties.txt_load_name.insert(END, selected_name)
     except:
         pass
-
 
 """
 Apply loads:
 """
-def apply_loads(scrollbar_properties, loads_properties, canvas_modelspace, layout_properties):
+def apply_loads(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties):
     selected_name = scrollbar_properties.last_selected_load
 
     # Get force data from text:
@@ -94,7 +87,31 @@ def apply_loads(scrollbar_properties, loads_properties, canvas_modelspace, layou
     loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x_pos.get())
     loads_properties.forces_dict[selected_name].y_real = float(layout_properties.txt_force_y_pos.get())
 
-    # Update position of load / load's figure:
+    # Delete old load figure:
     canvas_modelspace.delete(selected_name)
-    loads_properties.forces_dict[selected_name].draw_force(canvas_modelspace)
+
+    # Update load obj:
+    new_name = layout_properties.txt_load_name.get()
+    loads_properties.forces_dict[new_name] = loads_properties.forces_dict.pop(selected_name)
+    loads_properties.forces_dict[new_name].name = new_name
+
+    # Draw load figure with new tag-name:
+    loads_properties.forces_dict[new_name].draw_force(canvas_modelspace)
+
+    # Update name on scrollbar-list:
+    scrollbar_properties.mylist.delete(ACTIVE)
+    scrollbar_properties.mylist.insert(END, new_name)
+
+    # Update nem entry-box:
+    layout_properties.txt_load_name.delete(0, END)
+    layout_properties.txt_load_name.insert(END, 'Load-name')
+    layout_properties.txt_load_name.config(state = 'disabled')
     
+"""
+Remove forces from list:
+"""
+def remove_obj(canvas_modelspace, loads_properties, scrollbar_properties):
+    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
+    canvas_modelspace.delete(selected_name)
+    del loads_properties.forces_dict[selected_name]
+    scrollbar_properties.mylist.delete(ACTIVE)
