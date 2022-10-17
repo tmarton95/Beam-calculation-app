@@ -1,5 +1,5 @@
 from tkinter import*
-from load_classes import Force
+from load_classes import Force, Moment
 
 """
 Create force object:
@@ -22,6 +22,25 @@ def create_force(layout_properties, loads_properties, modelspace_origin, canvas_
         loads_properties.forces_dict[force_name].Fy = Fy
         loads_properties.forces_dict[force_name].draw_force(canvas_modelspace)
         scrollbar_properties.mylist.insert(END, force_name)
+
+"""
+Create moment object:
+""" 
+def create_moment(layout_properties, loads_properties, modelspace_origin, canvas_modelspace):
+    # Get forces from text field:
+    My = float(layout_properties.txt_moment_y.get())
+    Mz = float(layout_properties.txt_moment_z.get())
+    if My != 0 or Mz != 0:
+        loads_properties.moment_id += 1
+        moment_name = f"Moment_{loads_properties.moment_id}"
+
+        loads_properties.moments_dict[moment_name] = loads_properties.moments_dict.get(moment_name, Moment(modelspace_origin, name = moment_name))
+
+        # Set up attributes for the force object:
+        loads_properties.moments_dict[moment_name].x2_real = float(layout_properties.txt_moment_x_pos.get())
+        loads_properties.moments_dict[moment_name].My = My
+        loads_properties.moments_dict[moment_name].Mz = Mz
+        loads_properties.moments_dict[moment_name].draw_moment(canvas_modelspace)
 
 """
 Updating properties:

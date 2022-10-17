@@ -12,4 +12,4 @@ class Beam:
     def draw_beam(self, canvas_modelspace):
         self.length = self.length_real * self.scale
         self.x_end = self.x_start + self.length
-        canvas_modelspace.create_line(self.x_start, self.y_start, self.x_end, self.y_start, width=8, tag = 'beam')
+        canvas_modelspace.create_line(self.x_start, self.y_start, self.x_end, self.y_start, width=8, fill = '#2f2c2c', tag = 'beam')

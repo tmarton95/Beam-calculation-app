@@ -7,7 +7,7 @@ from constrain_classes import ConstrainFix, ConstrainRolling
 
 window = Tk()
 window.title("Beam tool")
-window.geometry('1200x600')
+window.geometry('1200x540')
 window.config(bg = '#9bf280')
 
 """

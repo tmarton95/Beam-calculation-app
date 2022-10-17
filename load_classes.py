@@ -1,12 +1,13 @@
 import math
 
-class Loads():
+class Loads:
     def __init__(self):
         self.forces_dict = {}
         self.moments_dict = {}
         self.force_id = 0
+        self.moment_id = 0
 
-class Force():
+class Force:
     def __init__(self, modelspace_origin, name):
         self.name = name
         self.L = 50
@@ -16,12 +17,16 @@ class Force():
         self.scale = 500
         self.Fx = 0
         self.Fy = 0
-        self.origin_x = modelspace_origin[0]
-        self.origin_y = modelspace_origin[1]
+        self.origin_x, self.origin_y = modelspace_origin
 
     def draw_force(self, canvas_modelspace):
         self.x_end = self.origin_x + self.x_real * self.scale
-        self.y_end = self.origin_y - self.y_real * self.scale
+        if self.Fy > 0:
+            self.y_end = self.origin_y + 5
+        elif self.Fy < 0:
+            self.y_end = self.origin_y - 5
+        elif self.Fy == 0:
+            self.y_end = self.origin_y - 10
 
         alfa = math.asin(self.Fy / (self.Fy**2 + self.Fx**2)**0.5)
         beta = math.pi / 6
@@ -45,3 +50,33 @@ class Force():
         # Draw arrow's head:
         canvas_modelspace.create_line(self.x_start_head1, self.y_start_head1, self.x_end, self.y_end, width = 3, tag = self.name)
         canvas_modelspace.create_line(self.x_start_head2, self.y_start_head2, self.x_end, self.y_end, width = 3, tag = self.name)
+
+
+class Moment:
+    def __init__(self, modelspace_origin, name):
+        self.name = name
+        self.L = 50
+        self.l = 25
+        self.x2_real = 0
+        self.scale = 500
+        self.My = 0
+        self.Mz = 0
+        self.origin_x, self.origin_y = modelspace_origin
+
+    def draw_moment(self, canvas_modelspace):
+        self.x2 = self.origin_x + self.x2_real * self.scale
+        self.x1 = self.x2 - self.l
+        self.x3 = self.x2 + self.l
+
+        self.y1 = self.origin_y - 20
+        self.y2 = self.y1 - 30
+        self.y3 = self.y1
+
+        canvas_modelspace.create_line(self.x1, self.y1, self.x2, self.y2, self.x3, self.y3, smooth = 1, width = 2.5, tag = self.name)
+
+        # Draw arrow's head:
+        canvas_modelspace.create_line(self.x1, self.y1, self.x1 + 9, self.y1 - 18, width = 3, tag = self.name)
+        canvas_modelspace.create_line(self.x1, self.y1, self.x1 + 17, self.y1 -5, width = 3, tag = self.name)
+
+        canvas_modelspace.create_line(self.x3, self.y3, self.x3 - 9, self.y3 - 18, width = 3, tag = self.name)
+        canvas_modelspace.create_line(self.x3, self.y3, self.x3 - 17, self.y3 -5, width = 3, tag = self.name)

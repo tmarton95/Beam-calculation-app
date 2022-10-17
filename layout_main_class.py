@@ -1,5 +1,5 @@
 from tkinter import*
-from functions import create_force, update_geometry, remove_obj, edit_loads, apply_loads
+from functions import create_force, create_moment, update_geometry, remove_obj, edit_loads, apply_loads
 
 class Layout():
     def __init__(self, window, canvas_modelspace, modelspace_origin, loads_properties, scrollbar_properties, const_fixed, const_roller, beam_properties):
@@ -129,35 +129,36 @@ class Layout():
         Label(window, image = self.Moment1_pic).place(x = 280, y= 200, anchor = 'center')
 
         # 'Add' button:
-        btn_add_moment = Button(window, text = "+", height = 2, font = ('Arial', 16))
+        btn_add_moment = Button(window, text = "+", height = 2, font = ('Arial', 16),
+        command = lambda: create_moment(self, loads_properties, modelspace_origin, canvas_modelspace))
         btn_add_moment.place(x = 280, y = 270, anchor = 'center')
 
         # X-position:
-        label_moment_x = Label(window, text = "X [m]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_moment_x_pos = Label(window, text = "X [m]:", font = ('Verdana', 9), borderwidth = 0.75,
                                                     relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_moment_x.place(x = 320, y = 210, anchor = 'w')
+        label_moment_x_pos.place(x = 320, y = 210, anchor = 'w')
 
-        self.txt_moment_x = Entry(window, width = 9)
-        self.txt_moment_x.place(x = 400, y = 210, anchor = 'w')
-        self.txt_moment_x.insert(END, '0')
+        self.txt_moment_x_pos = Entry(window, width = 9)
+        self.txt_moment_x_pos.place(x = 400, y = 210, anchor = 'w')
+        self.txt_moment_x_pos.insert(END, '0')
 
         # Y-component:
-        label_my = Label(window, text = "My [Nm]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_moment_y = Label(window, text = "My [Nm]:", font = ('Verdana', 9), borderwidth = 0.75,
                                             relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_my.place(x = 320, y = 245, anchor = 'w')
+        label_moment_y.place(x = 320, y = 245, anchor = 'w')
 
-        self.txt_my = Entry(window, width = 9)
-        self.txt_my.place(x = 400, y = 245, anchor = 'w')
-        self.txt_my.insert(END, '0')
+        self.txt_moment_y = Entry(window, width = 9)
+        self.txt_moment_y.place(x = 400, y = 245, anchor = 'w')
+        self.txt_moment_y.insert(END, '0')
 
         # Z-component:
-        label_mz = Label(window, text = "Mz [Nm]:", font = ('Verdana', 9), borderwidth = 0.75,
+        label_moment_z = Label(window, text = "Mz [Nm]:", font = ('Verdana', 9), borderwidth = 0.75,
                                     relief = 'ridge', bg = 'white', width = 8, height = 1)
-        label_mz.place(x = 320, y = 280, anchor = 'w')
+        label_moment_z.place(x = 320, y = 280, anchor = 'w')
 
-        self.txt_mz = Entry(window, width = 9)
-        self.txt_mz.place(x = 400, y = 280, anchor = 'w')
-        self.txt_mz.insert(END, '0')
+        self.txt_moment_z = Entry(window, width = 9)
+        self.txt_moment_z.place(x = 400, y = 280, anchor = 'w')
+        self.txt_moment_z.insert(END, '0')
 
         """
         Other operating buttons + labels:
@@ -168,22 +169,22 @@ class Layout():
 
         # Update geometry:
         btn_update_geometry = Button(window, text = "Update Geometry", width = 15, height = 1, font = ('Arial', 12), background='orange', 
-                        command = lambda: update_geometry(beam_properties, canvas_modelspace, const_fixed, const_roller, layout_properties = self))
+                            command = lambda: update_geometry(beam_properties, canvas_modelspace, const_fixed, const_roller, layout_properties = self))
         btn_update_geometry.place(x = 100, y = 460, anchor = 'center')
 
         # Edit loads:
-        btn_edit_loads = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: edit_loads(loads_properties, scrollbar_properties, layout_properties = self))
+        btn_edit_loads = Button(window, text = "Edit", height = 1, width = 8, font = ('Arial', 10), background = 'grey', 
+                            command= lambda: edit_loads(loads_properties, scrollbar_properties, layout_properties = self))
         btn_edit_loads.place(x = 450, y = 365, anchor = 'center')
 
         # Apply loads:
-        btn_apply = Button(window, text = "Apply", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: apply_loads(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties = self))
+        btn_apply = Button(window, text = "Apply", height = 1, width = 8, font = ('Arial', 10), background = 'grey', 
+                            command= lambda: apply_loads(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties = self))
         btn_apply.place(x = 450, y = 420, anchor = 'center')
 
                 # Remove
-        btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), 
-                                background = 'grey', command= lambda: remove_obj(canvas_modelspace, loads_properties, scrollbar_properties))
+        btn_remove = Button(window, text = "Remove", height = 1, width = 8, font = ('Arial', 10), background = 'grey', 
+                            command= lambda: remove_obj(canvas_modelspace, loads_properties, scrollbar_properties))
         btn_remove.place(x = 450, y = 475, anchor = 'center')
 
         self.txt_load_name = Entry(window, width = 14, font = (10))
