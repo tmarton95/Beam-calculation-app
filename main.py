@@ -7,15 +7,17 @@ from constrain_classes import ConstrainFix, ConstrainRolling
 
 window = Tk()
 window.title("Beam tool")
-window.geometry('1200x540')
+window.geometry('1098x478')
 window.config(bg = '#9bf280')
 
 """
 Initial properties:
 """
+# Size of 'modelspace' canvas:
 WIDTH_modelspace = 700
-HEIGHT_modelspace = 600
-X_modelspace = 500
+HEIGHT_modelspace = 472
+# Position of 'modelspace' canvas:
+X_modelspace = 392
 Y_modelspace = 0
 modelspace_origin = [100, 250]
 
@@ -27,7 +29,7 @@ Define initial instances from classes + draw figures:
 """
 loads_properties = Loads()
 
-scrollbar_properties = LayoutScrollbar(window)
+scrollbar_properties = LayoutScrollbar()
 
 const_fixed = ConstrainFix(modelspace_origin)
 const_fixed.draw_const(canvas_modelspace)

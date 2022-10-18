@@ -26,7 +26,7 @@ def create_force(layout_properties, loads_properties, modelspace_origin, canvas_
 """
 Create moment object:
 """ 
-def create_moment(layout_properties, loads_properties, modelspace_origin, canvas_modelspace):
+def create_moment(layout_properties, loads_properties, modelspace_origin, canvas_modelspace, scrollbar_properties):
     # Get forces from text field:
     My = float(layout_properties.txt_moment_y.get())
     Mz = float(layout_properties.txt_moment_z.get())
@@ -41,6 +41,7 @@ def create_moment(layout_properties, loads_properties, modelspace_origin, canvas
         loads_properties.moments_dict[moment_name].My = My
         loads_properties.moments_dict[moment_name].Mz = Mz
         loads_properties.moments_dict[moment_name].draw_moment(canvas_modelspace)
+        scrollbar_properties.mylist.insert(END, moment_name)
 
 """
 Updating properties:
@@ -76,61 +77,108 @@ def edit_loads(loads_properties, scrollbar_properties, layout_properties):
         selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
         scrollbar_properties.last_selected_load = selected_name
 
-        # Write out selected force's forces + position:
-        layout_properties.txt_force_x_pos.delete(0, 10)
-        layout_properties.txt_force_y_pos.delete(0, 10)
-        layout_properties.txt_force_x.delete(0, 10)
-        layout_properties.txt_force_y.delete(0, 10)
+        if selected_name in loads_properties.forces_dict:
+            # Write out selected force's forces + position:
+            layout_properties.txt_force_x_pos.delete(0, 10)
+            layout_properties.txt_force_y_pos.delete(0, 10)
+            layout_properties.txt_force_x.delete(0, 10)
+            layout_properties.txt_force_y.delete(0, 10)
 
-        # Insert load values to the entry boxes:
-        layout_properties.txt_force_x_pos.insert(END, loads_properties.forces_dict[selected_name].x_real)
-        layout_properties.txt_force_y_pos.insert(END, loads_properties.forces_dict[selected_name].y_real)
-        layout_properties.txt_force_x.insert(END, loads_properties.forces_dict[selected_name].Fx)
-        layout_properties.txt_force_y.insert(END, loads_properties.forces_dict[selected_name].Fy)
+            # Insert load values to the entry boxes:
+            layout_properties.txt_force_x_pos.insert(END, loads_properties.forces_dict[selected_name].x_real)
+            layout_properties.txt_force_y_pos.insert(END, loads_properties.forces_dict[selected_name].y_real)
+            layout_properties.txt_force_x.insert(END, loads_properties.forces_dict[selected_name].Fx)
+            layout_properties.txt_force_y.insert(END, loads_properties.forces_dict[selected_name].Fy)
+
+        elif selected_name in loads_properties.moments_dict:
+            # Write out selected force's forces + position:
+            layout_properties.txt_moment_x_pos.delete(0, 10)
+            layout_properties.txt_moment_y.delete(0, 10)
+            layout_properties.txt_moment_z.delete(0, 10)
+
+            # Insert load values to the entry boxes:
+            layout_properties.txt_moment_x_pos.insert(END, loads_properties.moments_dict[selected_name].x2_real)
+            layout_properties.txt_moment_y.insert(END, loads_properties.moments_dict[selected_name].My)
+            layout_properties.txt_moment_z.insert(END, loads_properties.moments_dict[selected_name].Mz)
 
         layout_properties.txt_load_name.config(state = 'normal')
         layout_properties.txt_load_name.delete(0, END)
         layout_properties.txt_load_name.insert(END, selected_name)
+
     except:
-        pass
+        print("Select a Load!")
 
 """
 Apply loads:
 """
 def apply_loads(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties):
-    selected_name = scrollbar_properties.last_selected_load
+    if scrollbar_properties.last_selected_load != "":
+        selected_name = scrollbar_properties.last_selected_load
 
-    # Get force data from text:
-    loads_properties.forces_dict[selected_name].Fx = float(layout_properties.txt_force_x.get())
-    loads_properties.forces_dict[selected_name].Fy = float(layout_properties.txt_force_y.get())
-    loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x_pos.get())
-    loads_properties.forces_dict[selected_name].y_real = float(layout_properties.txt_force_y_pos.get())
+        if selected_name in loads_properties.forces_dict:
+            # Get force data from text:
+            loads_properties.forces_dict[selected_name].Fx = float(layout_properties.txt_force_x.get())
+            loads_properties.forces_dict[selected_name].Fy = float(layout_properties.txt_force_y.get())
+            loads_properties.forces_dict[selected_name].x_real = float(layout_properties.txt_force_x_pos.get())
+            loads_properties.forces_dict[selected_name].y_real = float(layout_properties.txt_force_y_pos.get())
 
-    # Delete old load figure:
-    canvas_modelspace.delete(selected_name)
+            # Delete old load figure:
+            canvas_modelspace.delete(selected_name)
 
-    # Update load obj:
-    new_name = layout_properties.txt_load_name.get()
-    loads_properties.forces_dict[new_name] = loads_properties.forces_dict.pop(selected_name)
-    loads_properties.forces_dict[new_name].name = new_name
+            # Update load obj:
+            new_name = layout_properties.txt_load_name.get()
+            loads_properties.forces_dict[new_name] = loads_properties.forces_dict.pop(selected_name)
+            loads_properties.forces_dict[new_name].name = new_name
 
-    # Draw load figure with new tag-name:
-    loads_properties.forces_dict[new_name].draw_force(canvas_modelspace)
+            # Draw load figure with new tag-name:
+            loads_properties.forces_dict[new_name].draw_force(canvas_modelspace)
 
-    # Update name on scrollbar-list:
-    scrollbar_properties.mylist.delete(ACTIVE)
-    scrollbar_properties.mylist.insert(END, new_name)
+        elif selected_name in loads_properties.moments_dict:
+            # Get force data from text:
+            loads_properties.moments_dict[selected_name].My = float(layout_properties.txt_moment_y.get())
+            loads_properties.moments_dict[selected_name].Mz = float(layout_properties.txt_moment_z.get())
+            loads_properties.moments_dict[selected_name].x2_real = float(layout_properties.txt_moment_x_pos.get())
 
-    # Update nem entry-box:
-    layout_properties.txt_load_name.delete(0, END)
-    layout_properties.txt_load_name.insert(END, 'Load-name')
-    layout_properties.txt_load_name.config(state = 'disabled')
+            # Delete old load figure:
+            canvas_modelspace.delete(selected_name)
+
+            # Update load obj:
+            new_name = layout_properties.txt_load_name.get()
+            loads_properties.moments_dict[new_name] = loads_properties.moments_dict.pop(selected_name)
+            loads_properties.moments_dict[new_name].name = new_name
+
+            # Draw load figure with new tag-name:
+            loads_properties.moments_dict[new_name].draw_moment(canvas_modelspace)
+
+        # Update name on scrollbar-list:
+        scrollbar_properties.mylist.delete(ACTIVE)
+        scrollbar_properties.mylist.insert(END, new_name)
+
+        # Update nem entry-box:
+        layout_properties.txt_load_name.delete(0, END)
+        layout_properties.txt_load_name.insert(END, 'Load-name')
+        layout_properties.txt_load_name.config(state = 'disabled')
+
+        scrollbar_properties.last_selected_load = ""
     
 """
 Remove forces from list:
 """
-def remove_obj(canvas_modelspace, loads_properties, scrollbar_properties):
-    selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
-    canvas_modelspace.delete(selected_name)
-    del loads_properties.forces_dict[selected_name]
-    scrollbar_properties.mylist.delete(ACTIVE)
+def remove_obj(canvas_modelspace, loads_properties, scrollbar_properties, layout_properties):
+    try:
+        selected_name = scrollbar_properties.mylist.get(scrollbar_properties.mylist.curselection())
+        canvas_modelspace.delete(selected_name)
+        if selected_name in loads_properties.forces_dict:
+            del loads_properties.forces_dict[selected_name]
+        elif selected_name in loads_properties.moments_dict:
+            del loads_properties.moments_dict[selected_name]
+
+        scrollbar_properties.mylist.delete(ACTIVE)
+
+        end_index = scrollbar_properties.mylist.index("end")
+        if end_index == 0:
+            layout_properties.txt_load_name.delete(0, END)
+            layout_properties.txt_load_name.insert(END, 'Load-name')
+            layout_properties.txt_load_name.config(state = 'disabled')
+    except:
+        print("Select a Load!")
