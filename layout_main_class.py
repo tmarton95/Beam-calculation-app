@@ -246,3 +246,4 @@ class Layout:
 
         scrollbar_properties.draw_scroll_bar(window, HEIGHT_tab_5, HEIGHT_tab_6, WIDTH_tab_1)
 
+
