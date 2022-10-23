@@ -2,7 +2,7 @@ from tkinter import*
 from functions import create_force, create_moment, update_geometry, remove_obj, edit_loads, apply_loads
 
 class Layout:
-    def __init__(self, window, canvas_modelspace, modelspace_origin, loads_properties, scrollbar_properties, const_fixed, const_roller, beam_properties):
+    def __init__(self, window, canvas_modelspace, tab2_canvas, modelspace_origin, loads_properties, scrollbar_properties, const_fixed, const_roller, beam_properties):
         self.Const1_pic = PhotoImage(file = "pics\\const1.png")
         self.Const2_pic = PhotoImage(file = "pics\\Const2_2.png")
         self.Beam1_pic = PhotoImage(file = "pics\\Beam1_2.png")
@@ -14,6 +14,7 @@ class Layout:
         Define model spaces:
         """
         op_tabs_color = '#9bf280'
+        tab_2_color = "#eddb90"
 
         WIDTH_tab_1 = 190
         HEIGHT_tab_1 = 60
@@ -245,5 +246,19 @@ class Layout:
         self.txt_load_name.config(state = 'disabled')
 
         scrollbar_properties.draw_scroll_bar(window, HEIGHT_tab_5, HEIGHT_tab_6, WIDTH_tab_1)
+
+        """
+        Layout on results (tab-2) canvas:
+        """
+        pady_tab3_canvas = 35
+        Label(tab2_canvas, text = 'Reaction forces:', relief='solid', borderwidth=0.5, width = 20).place(x = 20, y = 100, anchor = 'w')
+        label_Ax = Label(tab2_canvas, text = "Ax = ... [N]", font = ('Verdana', 9), bg = tab_2_color)
+        label_Ax.place(x = 20, y = 130, anchor = 'w')
+
+        label_Ay = Label(tab2_canvas, text = "Ay = ... [N]", font = ('Verdana', 9), bg = tab_2_color)
+        label_Ay.place(x = 20, y = 130 + pady_tab3_canvas, anchor = 'w')
+
+        label_By = Label(tab2_canvas, text = "By = ... [N]", font = ('Verdana', 9), bg = tab_2_color)
+        label_By.place(x = 20, y = 130 + pady_tab3_canvas*2, anchor = 'w')
 
 

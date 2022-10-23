@@ -6,6 +6,7 @@ class Loads:
         self.moments_dict = {}
         self.force_id = 0
         self.moment_id = 0
+        self.reactions = {'Ax': 0, 'Ay': 0, 'By': 0}
 
 class Force:
     def __init__(self, modelspace_origin, name):
